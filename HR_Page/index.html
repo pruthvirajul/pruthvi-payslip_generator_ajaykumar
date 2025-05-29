@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Payslip Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --danger-color: #e63946;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+        }
+
+        .tab-navigation {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .invalid-feedback {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .is-invalid {
+            border-color: var(--danger-color) !important;
+        }
+
+        .is-invalid + .invalid-feedback {
+            display: block;
+        }
+
+        input[type="month"] {
+            cursor: pointer;
+        }
+
+        .amount-section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            overflow: hidden;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+        }
+
+        .alert-success i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .total-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .total-amount {
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .no-records i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .form-row, .amount-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-filter {
+                flex-direction: column;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            .filter-group {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+        }
+        #view{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">HR Payslip Management</div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=HR+Manager&background=random" alt="User">
+                <span>HR Manager</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-id="generate">Generate Payslip</button>
+                <button class="tab-btn" data-id="details">Details</button>
+            </div>
+
+            <div class="alert-success" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span>Payslip generated successfully!</span>
+            </div>
+            <div class="alert-danger" id="errorMessage"></div>
+
+            <section class="tab-content active" id="generateTab">
+                <div class="card">
+                    <h2 class="card-title">Generate Payslip</h2>
+                    <form id="payslipForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeId" class="form-label">Employee ID</label>
+                                <input type="text" id="employeeId" class="form-control" placeholder="ATS0962" required>
+                                <div class="invalid-feedback">Employee ID must be ATS0 followed by 3 digits (not 000)</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeName" class="form-label">Employee Name</label>
+                                <input type="text" id="employeeName" class="form-control" placeholder="John Doe" required>
+                                <div class="invalid-feedback">Name must contain letters and single spaces</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employeeEmail" class="form-label">Employee Email</label>
+                                <input type="email" id="employeeEmail" class="form-control" placeholder="john.doe@example.com" required>
+                                <div class="invalid-feedback">Please enter a valid email address</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="monthYear" class="form-label">Month & Year</label>
+                                <input type="month" id="monthYear" class="form-control" min="2021-01" max="2025-05" required>
+                                <div class="invalid-feedback">Select a month/year between Jan 2021 and May 2025</div>
+                            </div>
+                        </div>
+
+                        <div class="amount-section">
+                            <h3 class="section-title">Earnings</h3>
+                            <div class="amount-grid">
+                                <div class="form-group">
+                                    <label for="basicSalary" class="form-label">Basic Salary</label>
+                                    <input type="text" id="basicSalary" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Basic salary must be a positive number</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dearnessAllowance" class="form-label">Dearness Allowance</label>
+                                    <input type="text" id="dearnessAllowance" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hra" class="form-label">House Rent Allowance</label>
+                                    <input type="text" id="hra" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="wageAllowance" class="form-label">Wage Allowance</label>
+                                    <input type="text" id="wageAllowance" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="medicalAllowance" class="form-label">Medical Allowance</label>
+                                    <input type="text" id="medicalAllowance" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="amount-section">
+                            <h3 class="section-title">Deductions</h3>
+                            <div class="amount-grid">
+                                <div class="form-group">
+                                    <label for="providentFund" class="form-label">Provident Fund</label>
+                                    <input type="text" id="providentFund" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="esi" class="form-label">Employee State Insurance</label>
+                                    <input type="text" id="esi" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tds" class="form-label">Tax Deducted at Source</label>
+                                    <input type="text" id="tds" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lwp" class="form-label">Leave Without Pay</label>
+                                    <input type="text" id="lwp" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="specialDeduction" class="form-label">Special Deduction</label>
+                                    <input type="text" id="specialDeduction" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="total-section">
+                            <div>Net Salary:</div>
+                            <div class="total-amount" id="netSalary">₹0.00</div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Generate Payslip</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="tab-content" id="detailsTab">
+                <div class="card">
+                    <h2 class="card-title">Payslip Details</h2>
+                    <div class="search-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search by employee name or ID">
+                        </div>
+                        <div class="filter-group">
+                            <select id="monthFilter" class="form-control">
+                                <option value="">All Months</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <select id="yearFilter" class="form-control">
+                                <option value="">All Years</option>
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Payslip ID</th>
+                                    <th>Employee ID</th>
+                                    <th>Employee Name</th>
+                                    <th>Month/Year</th>
+                                    <th>Net Salary</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="payslipHistory"></tbody>
+                        </table>
+                    </div>
+                    <div class="no-records" id="noRecords" style="display: none;">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>No records found</h3>
+                        <p>Generate a new payslip to see it appear here</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Payslip Generation</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Please review the details before generating the payslip.</p>
+                <div id="payslipSummary"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="viewPayslipModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Payslip Details</h3>
+                <button class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="payslipDetailsContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="downloadBtn">Download PDF</button>
+                <button class="btn btn-secondary" id="closeViewBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const { jsPDF } = window.jspdf;
+            const companyLogoUrl = 'https://via.placeholder.com/150x50?text=Company+Logo';
+            let isSubmitting = false;
+
+            // Tab navigation
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                    button.classList.add('active');
+                    document.getElementById(button.dataset.id + 'Tab').classList.add('active');
+                    if (button.dataset.id === 'details') {
+                        loadPayslipHistory();
+                    }
+                });
+            });
+
+            // Form elements
+            const payslipForm = document.getElementById('payslipForm');
+            const employeeIdInput = document.getElementById('employeeId');
+            const employeeNameInput = document.getElementById('employeeName');
+            const employeeEmailInput = document.getElementById('employeeEmail');
+            const monthYearInput = document.getElementById('monthYear');
+            const netSalaryDisplay = document.getElementById('netSalary');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = document.getElementById('submitBtn');
+            const numberInputs = document.querySelectorAll('input[inputmode="numeric"]');
+
+            // Set current month as default
+            const today = new Date();
+            monthYearInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+            // Validations
+            employeeIdInput.addEventListener('input', () => {
+                const isValid = /^ATS0[0-9]{3}$/.test(employeeIdInput.value) && employeeIdInput.value !== 'ATS0000';
+                employeeIdInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            employeeNameInput.addEventListener('input', () => {
+                const isValid = /^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/.test(employeeNameInput.value);
+                employeeNameInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            employeeEmailInput.addEventListener('input', () => {
+                const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|org|co\.in)$/i.test(employeeEmailInput.value);
+                employeeEmailInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            monthYearInput.addEventListener('input', () => {
+                const value = monthYearInput.value;
+                const date = value ? new Date(value + '-01') : null;
+                const isValid = date && date >= new Date('2021-01-01') && date <= new Date('2025-05-01');
+                monthYearInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            numberInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    input.value = input.value.replace(/[^0-9.]/g, '');
+                    const value = parseFloat(input.value) || 0;
+                    if (input.id === 'basicSalary') {
+                        input.classList.toggle('is-invalid', value <= 0);
+                    } else {
+                        input.classList.toggle('is-invalid', value < 0);
+                    }
+                    calculateNetSalary();
+                });
+            });
+
+            function calculateNetSalary() {
+                const earnings = ['basicSalary', 'dearnessAllowance', 'hra', 'wageAllowance', 'medicalAllowance']
+                    .reduce((sum, id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
+                const deductions = ['providentFund', 'esi', 'tds', 'lwp', 'specialDeduction']
+                    .reduce((sum, id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
+                const netSalary = earnings - deductions;
+                netSalaryDisplay.textContent = `₹${netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            }
+
+            function validateForm() {
+                let isValid = true;
+                const errors = [];
+
+                if (!/^ATS0[0-9]{3}$/.test(employeeIdInput.value) || employeeIdInput.value === 'ATS0000') {
+                    employeeIdInput.classList.add('is-invalid');
+                    errors.push('Invalid Employee ID (format: ATS0XXX)');
+                    isValid = false;
+                }
+
+                if (!/^[a-zA-Z]+(?:\s[a-zA-Z]+)*$/.test(employeeNameInput.value)) {
+                    employeeNameInput.classList.add('is-invalid');
+                    errors.push('Name must contain only letters and single spaces');
+                    isValid = false;
+                }
+
+                if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|org|co\.in)$/i.test(employeeEmailInput.value)) {
+                    employeeEmailInput.classList.add('is-invalid');
+                    errors.push('Invalid email format');
+                    isValid = false;
+                }
+
+                const dateValue = monthYearInput.value;
+                const date = dateValue ? new Date(dateValue + '-01') : null;
+                if (!date || date < new Date('2021-01-01') || date > new Date('2025-05-01')) {
+                    monthYearInput.classList.add('is-invalid');
+                    errors.push('Invalid month/year selection');
+                    isValid = false;
+                }
+
+                const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
+                if (basicSalary <= 0) {
+                    document.getElementById('basicSalary').classList.add('is-invalid');
+                    errors.push('Basic salary must be positive');
+                    isValid = false;
+                }
+
+                return { isValid, errors };
+            }
+
+            // Form submission
+            payslipForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (isSubmitting) return;
+                
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                const { isValid, errors } = validateForm();
+                if (!isValid) {
+                    errorMessage.textContent = `Please correct: ${errors.join(', ')}`;
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                isSubmitting = true;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                const formData = {
+                    employee_id: employeeIdInput.value,
+                    employee_name: employeeNameInput.value,
+                    employee_email: employeeEmailInput.value,
+                    month_year: new Date(monthYearInput.value + '-01').toLocaleString('en-US', { month: 'long', year: 'numeric' }),
+                    basic_salary: parseFloat(document.getElementById('basicSalary').value) || 0,
+                    da: parseFloat(document.getElementById('dearnessAllowance').value) || 0,
+                    hra: parseFloat(document.getElementById('hra').value) || 0,
+                    wage_allowance: parseFloat(document.getElementById('wageAllowance').value) || 0,
+                    medical_allowance: parseFloat(document.getElementById('medicalAllowance').value) || 0,
+                    pf: parseFloat(document.getElementById('providentFund').value) || 0,
+                    esi: parseFloat(document.getElementById('esi').value) || 0,
+                    tds: parseFloat(document.getElementById('tds').value) || 0,
+                    lwp: parseFloat(document.getElementById('lwp').value) || 0,
+                    special_deduction: parseFloat(document.getElementById('specialDeduction').value) || 0
+                };
+
+                try {
+                    const response = await fetch('http://localhost:3000/api/payslips', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Failed to submit payslip');
+                    }
+
+                    const result = await response.json();
+                    console.log('Payslip created:', result);
+                    
+                    successMessage.style.display = 'flex';
+                    setTimeout(() => successMessage.style.display = 'none', 3000);
+                    
+                    payslipForm.reset();
+                    netSalaryDisplay.textContent = '₹0.00';
+                    
+                    if (document.getElementById('detailsTab').classList.contains('active')) {
+                        loadPayslipHistory();
+                    }
+                } catch (err) {
+                    console.error('Submission error:', err);
+                    errorMessage.textContent = err.message;
+                    errorMessage.style.display = 'block';
+                } finally {
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Generate Payslip';
+                }
+            });
+
+            async function loadPayslipHistory() {
+                try {
+                    const search = document.getElementById('searchInput').value;
+                    const month = document.getElementById('monthFilter').value;
+                    const year = document.getElementById('yearFilter').value;
+                    
+                    const params = new URLSearchParams();
+                    if (search) params.append('search', search);
+                    if (month) params.append('month', month);
+                    if (year) params.append('year', year);
+                    
+                    const url = `http://localhost:3000/api/payslips/history?${params.toString()}`;
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch payslip history');
+                    }
+                    
+                    const payslips = await response.json();
+                    displayPayslips(payslips);
+                } catch (err) {
+                    console.error('Error:', err);
+                    errorMessage.textContent = err.message;
+                    errorMessage.style.display = 'block';
+                }
+            }
+
+            function displayPayslips(payslips) {
+                const historyBody = document.getElementById('payslipHistory');
+                const noRecords = document.getElementById('noRecords');
+                
+                historyBody.innerHTML = '';
+                noRecords.style.display = payslips.length === 0 ? 'block' : 'none';
+                
+                payslips.forEach(payslip => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${payslip.payslip_id}</td>
+                        <td>${payslip.employee_id}</td>
+                        <td>${payslip.employee_name}</td>
+                        <td>${payslip.month_year}</td>
+                        <td>₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                        <td><span class="badge badge-success">${payslip.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary view-btn" id="view">View</button>
+                            <button class="btn btn-sm btn-primary download-btn">Download</button>
+                        </td>
+                    `;
+                    
+                    row.querySelector('.view-btn').addEventListener('click', () => showPayslipDetails(payslip));
+                    row.querySelector('.download-btn').addEventListener('click', () => downloadPayslipAsPDF(payslip));
+                    
+                    historyBody.appendChild(row);
+                });
+            }
+
+            function showPayslipDetails(payslip) {
+                document.getElementById('payslipDetailsContent').innerHTML = `
+                    <h2 style="text-align: center; color: var(--primary-color);">PAYSLIP</h2>
+                    <p style="text-align: center; color: #666;">${payslip.month_year}</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <p><strong>Employee ID:</strong> ${payslip.employee_id}</p>
+                            <p><strong>Name:</strong> ${payslip.employee_name}</p>
+                            <p><strong>Email:</strong> ${payslip.employee_email}</p>
+                        </div>
+                        <div>
+                            <p><strong>Payslip ID:</strong> ${payslip.payslip_id}</p>
+                            <p><strong>Status:</strong> ${payslip.status}</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
+                        <div>
+                            <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Earnings</h3>
+                            <p><strong>Basic Salary:</strong> ₹${payslip.basic_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Dearness Allowance:</strong> ₹${payslip.da.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>House Rent Allowance:</strong> ₹${payslip.hra.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Wage Allowance:</strong> ₹${payslip.wage_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Medical Allowance:</strong> ₹${payslip.medical_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p style="font-weight: bold;">Total Earnings: ₹${(payslip.basic_salary + payslip.da + payslip.hra + payslip.wage_allowance + payslip.medical_allowance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                        <div>
+                            <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Deductions</h3>
+                            <p><strong>Provident Fund:</strong> ₹${payslip.pf.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Employee State Insurance:</strong> ₹${payslip.esi.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Tax Deducted at Source:</strong> ₹${payslip.tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Leave Without Pay:</strong> ₹${payslip.lwp.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p><strong>Special Deduction:</strong> ₹${payslip.special_deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p style="font-weight: bold;">Total Deductions: ₹${(payslip.pf + payslip.esi + payslip.tds + payslip.lwp + payslip.special_deduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                    </div>
+                    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; text-align: right;">
+                        <p style="font-weight: bold; font-size: 18px;">Net Salary: ₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                    </div>
+                `;
+                document.getElementById('viewPayslipModal').classList.add('show');
+            }
+
+            async function downloadPayslipAsPDF(payslip) {
+                try {
+                    const docContent = document.createElement('div');
+                    docContent.style.padding = '20px';
+                    docContent.style.fontFamily = 'Arial, sans-serif';
+                    docContent.innerHTML = `
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <img src="./upload/logo.png" style="height: 50px;" alt="Company Logo">
+                            <h2 style="color: var(--primary-color);">PAYSLIP</h2>
+                            <p style="color: #666;">${payslip.month_year}</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <p><strong>Employee ID:</strong> ${payslip.employee_id}</p>
+                                <p><strong>Name:</strong> ${payslip.employee_name}</p>
+                                <p><strong>Email:</strong> ${payslip.employee_email}</p>
+                            </div>
+                            <div>
+                                <p><strong>Payslip ID:</strong> ${payslip.payslip_id}</p>
+                                <p><strong>Status:</strong> ${payslip.status}</p>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
+                            <div>
+                                <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Earnings</h3>
+                                <p><strong>Basic Salary:</strong> ₹${payslip.basic_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Dearness Allowance:</strong> ₹${payslip.da.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>House Rent Allowance:</strong> ₹${payslip.hra.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Wage Allowance:</strong> ₹${payslip.wage_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Medical Allowance:</strong> ₹${payslip.medical_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p style="font-weight: bold;">Total Earnings: ₹${(payslip.basic_salary + payslip.da + payslip.hra + payslip.wage_allowance + payslip.medical_allowance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            </div>
+                            <div>
+                                <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Deductions</h3>
+                                <p><strong>Provident Fund:</strong> ₹${payslip.pf.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Employee State Insurance:</strong> ₹${payslip.esi.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Tax Deducted at Source:</strong> ₹${payslip.tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Leave Without Pay:</strong> ₹${payslip.lwp.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p><strong>Special Deduction:</strong> ₹${payslip.special_deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                                <p style="font-weight: bold;">Total Deductions: ₹${(payslip.pf + payslip.esi + payslip.tds + payslip.lwp + payslip.special_deduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            </div>
+                        </div>
+                        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; text-align: right;">
+                            <p style="font-weight: bold; font-size: 18px;">Net Salary: ₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <p style="text-align: center; color: #666;">Astrolite Tech Solutions</p>
+                        </div>
+                    `;
+                    document.body.appendChild(docContent);
+
+                    const canvas = await html2canvas(docContent, { scale: 2 });
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgWidth = 210;
+                    const pageHeight = 297;
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    pdf.save(`Payslip_${payslip.payslip_id}.pdf`);
+                    
+                    document.body.removeChild(docContent);
+                } catch (err) {
+                    console.error('PDF generation error:', err);
+                    errorMessage.textContent = 'Failed to generate PDF';
+                    errorMessage.style.display = 'block';
+                }
+            }
+
+            // Close modal buttons
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    btn.closest('.modal').classList.remove('show');
+                });
+            });
+
+            // Form reset
+            payslipForm.querySelector('button[type="reset"]').addEventListener('click', () => {
+                payslipForm.reset();
+                netSalaryDisplay.textContent = '₹0.00';
+                document.querySelectorAll('.form-control').forEach(input => input.classList.remove('is-invalid'));
+                errorMessage.style.display = 'none';
+                monthYearInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            });
+
+            // Search and filter events
+            document.getElementById('searchInput').addEventListener('input', loadPayslipHistory);
+            document.getElementById('monthFilter').addEventListener('change', loadPayslipHistory);
+            document.getElementById('yearFilter').addEventListener('change', loadPayslipHistory);
+
+            // Initial load if on details tab
+            if (document.getElementById('detailsTab').classList.contains('active')) {
+                loadPayslipHistory();
+            }
+        });
+    </script>
+</body>
+</html>
