@@ -38,38 +38,90 @@
             padding: 20px;
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
+        header {
+            position: relative;
+            text-align: center;
+            height: 110px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .logo {
-            font-size: 24px;
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
             font-weight: 700;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
+        header p {
+            font-weight: 300;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            max-width: 700px;
+            opacity: 0.9;
+            z-index: 2;
         }
 
-        .user-profile img {
-            width: 40px;
-            height: 40px;
+        @keyframes moveCircles {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-50%); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .banner-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .circle {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid white;
+            animation: moveCircles 10s infinite linear;
+        }
+
+        .circle:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-duration: 8s;
+        }
+
+        .circle:nth-child(2) {
+            top: 50%;
+            left: 70%;
+            animation-duration: 12s;
+        }
+
+        .circle:nth-child(3) {
+            top: 80%;
+            left: 40%;
+            animation-duration: 15s;
         }
 
         .tab-navigation {
             display: flex;
+            justify-content: center;
+            gap: 200px;
             margin-bottom: 20px;
             border-bottom: 1px solid #ddd;
         }
@@ -160,7 +212,7 @@
             display: block;
         }
 
-        input[type="month"] {
+        input[type="month"], input[type="date"] {
             cursor: pointer;
         }
 
@@ -335,7 +387,7 @@
         }
 
         .modal-footer {
-            padding: 15px 20px;
+            padding: 10px;
             background-color: #f8f9fa;
             display: flex;
             justify-content: flex-end;
@@ -409,6 +461,13 @@
             color: #ddd;
         }
 
+        /* PDF-specific styles */
+        .pdf-content {
+           
+            font-family: monospace !important;
+            line-height: 1.1;
+        }
+
         @media (max-width: 768px) {
             .form-row, .amount-grid {
                 grid-template-columns: 1fr;
@@ -424,25 +483,24 @@
                 flex-wrap: wrap;
             }
         }
-        #view{
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="logo">HR Payslip Management</div>
-            <div class="user-profile">
-                <img src="https://ui-avatars.com/api/?name=HR+Manager&background=random" alt="User">
-                <span>HR Manager</span>
+        <header>
+            <div class="banner-background">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
             </div>
+            <h1>HR Payslip Management</h1>
+            <p>Generate and manage employee payslips efficiently</p>
         </header>
 
         <main>
             <div class="tab-navigation">
                 <button class="tab-btn active" data-id="generate">Generate Payslip</button>
-                <button class="tab-btn" data-id="details">Details</button>
+                <button class="tab-btn" data-id="details">Payslip History</button>
             </div>
 
             <div class="alert-success" id="successMessage">
@@ -458,19 +516,19 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="employeeId" class="form-label">Employee ID</label>
-                                <input type="text" id="employeeId" class="form-control" placeholder="ATS0962" required>
-                                <div class="invalid-feedback">Employee ID must be ATS0 followed by 3 digits (not 000)</div>
+                                <input type="text" id="employeeId" class="form-control" placeholder="ATS0xxx" minlength="7" maxlength="7" required>
+                                <div class="invalid-feedback">Employee ID must be ATS0 followed by 3 digits (ATS0xxx)</div>
                             </div>
                             <div class="form-group">
                                 <label for="employeeName" class="form-label">Employee Name</label>
-                                <input type="text" id="employeeName" class="form-control" placeholder="John Doe" required>
+                                <input type="text" id="employeeName" class="form-control" placeholder="Employee Name" minlength="3" maxlength="40" required>
                                 <div class="invalid-feedback">Name must contain letters and single spaces</div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="employeeEmail" class="form-label">Employee Email</label>
-                                <input type="email" id="employeeEmail" class="form-control" placeholder="john.doe@example.com" required>
+                                <input type="email" id="employeeEmail" class="form-control" placeholder="Employee Email" minlength="3" maxlength="40" required>
                                 <div class="invalid-feedback">Please enter a valid email address</div>
                             </div>
                             <div class="form-group">
@@ -478,6 +536,127 @@
                                 <input type="month" id="monthYear" class="form-control" min="2021-01" max="2025-05" required>
                                 <div class="invalid-feedback">Select a month/year between Jan 2021 and May 2025</div>
                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="designation" class="form-label">Designation</label>
+                                <select id="designation" class="form-control" required>
+                                    <option value="" disabled selected>Select Designation</option>
+                                    <optgroup label="Software Development">
+                                        <option value="Trainee Software Engineer">Trainee Software Engineer</option>
+                                        <option value="Junior Software Engineer">Junior Software Engineer</option>
+                                        <option value="Software Engineer">Software Engineer</option>
+                                        <option value="Senior Software Engineer">Senior Software Engineer</option>
+                                        <option value="Associate Technical Lead">Associate Technical Lead</option>
+                                        <option value="Technical Lead">Technical Lead</option>
+                                        <option value="Project Manager">Project Manager</option>
+                                    </optgroup>
+                                    <optgroup label="Testing">
+                                        <option value="Trainee Test Engineer">Trainee Test Engineer</option>
+                                        <option value="Junior Test Engineer">Junior Test Engineer</option>
+                                        <option value="Test Engineer">Test Engineer</option>
+                                        <option value="Senior Test Engineer">Senior Test Engineer</option>
+                                        <option value="Test Lead">Test Lead</option>
+                                    </optgroup>
+                                    <optgroup label="Data & Analytics">
+                                        <option value="Data Analyst">Data Analyst</option>
+                                        <option value="Senior Data Analyst">Senior Data Analyst</option>
+                                        <option value="Power BI Developer">Power BI Developer</option>
+                                        <option value="Data Scientist">Data Scientist</option>
+                                    </optgroup>
+                                    <optgroup label="DevOps">
+                                        <option value="DevOps Engineer">DevOps Engineer</option>
+                                        <option value="Senior DevOps Engineer">Senior DevOps Engineer</option>
+                                        <option value="DevOps Architect">DevOps Architect</option>
+                                    </optgroup>
+                                    <optgroup label="HR & Admin">
+                                        <option value="HR Executive">HR Executive</option>
+                                        <option value="HR Manager">HR Manager</option>
+                                        <option value="Admin Executive">Admin Executive</option>
+                                        <option value="Admin Manager">Admin Manager</option>
+                                    </optgroup>
+                                    <optgroup label="Finance">
+                                        <option value="Finance Executive">Finance Executive</option>
+                                        <option value="Senior Finance Executive">Senior Finance Executive</option>
+                                        <option value="Finance Manager">Finance Manager</option>
+                                    </optgroup>
+                                </select>
+                                <div class="invalid-feedback">Please select a designation</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="officeLocation" class="form-label">Office Location</label>
+                                <select id="officeLocation" class="form-control" required>
+                                    <option value="" disabled selected>Select Office Location</option>
+                                    <option value="Hyderabad">Hyderabad</option>
+                                    <option value="Bangalore">Bangalore</option>
+                                    <option value="Pune">Pune</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="Delhi">Delhi</option>
+                                </select>
+                                <div class="invalid-feedback">Please select an office location</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="employmentType" class="form-label">Employment Type</label>
+                                <select id="employmentType" class="form-control" required>
+                                    <option value="" disabled selected>Select Employment Type</option>
+                                    <option value="Permanent">Permanent</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Temporary">Temporary</option>
+                                    <option value="Intern">Intern</option>
+                                </select>
+                                <div class="invalid-feedback">Please select an employment type</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateOfJoining" class="form-label">Date of Joining</label>
+                                <input type="date" id="dateOfJoining" class="form-control" required>
+                                <div class="invalid-feedback">Date must be between Jan 2021 and today</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workingDays" class="form-label">Working Days</label>
+                                <input type="number" id="workingDays" class="form-control" min="1" max="31" required>
+                                <div class="invalid-feedback">Working days must be between 1 and 31</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bankName" class="form-label">Bank Name</label>
+                                <input type="text" id="bankName" class="form-control" placeholder="Bank Name" minlength="3" maxlength="50" required>
+                                <div class="invalid-feedback">Bank name must contain letters and spaces</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="panNo" class="form-label">PAN No</label>
+                                <input type="text" id="panNo" class="form-control" placeholder="JASWP9876H" minlength="10" maxlength="10" required>
+                                <div class="invalid-feedback">PAN must be 5 letters, 4 digits, 1 letter</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bankAccountNo" class="form-label">Bank Account No</label>
+                                <input type="text" id="bankAccountNo" class="form-control" placeholder="Bank Account Number" minlength="10" maxlength="18" required>
+                                <div class="invalid-feedback">Account number must be 10-18 digits</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pfNo" class="form-label">Provident Fund No</label>
+                                <input type="text" id="pfNo" class="form-control" placeholder="WWEER87655667673" minlength="12" maxlength="22" required>
+                                <div class="invalid-feedback">PF number must be 12-22 alphanumeric characters</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="uanNo" class="form-label">UAN No</label>
+                                <input type="text" id="uanNo" class="form-control" placeholder="939999999999" minlength="12" maxlength="12" required>
+                                <div class="invalid-feedback">UAN must be exactly 12 digits</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="esicNo" class="form-label">ESIC No</label>
+                                <input type="text" id="esicNo" class="form-control" placeholder="ESIC090292" minlength="10" maxlength="17" required>
+                                <div class="invalid-feedback">ESIC number must be 10-17 alphanumeric characters</div>
+                            </div>
+                            <div class="form-group"></div>
                         </div>
 
                         <div class="amount-section">
@@ -489,23 +668,13 @@
                                     <div class="invalid-feedback">Basic salary must be a positive number</div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="dearnessAllowance" class="form-label">Dearness Allowance</label>
-                                    <input type="text" id="dearnessAllowance" class="form-control" inputmode="numeric" required>
-                                    <div class="invalid-feedback">Amount must be non-negative</div>
-                                </div>
-                                <div class="form-group">
                                     <label for="hra" class="form-label">House Rent Allowance</label>
                                     <input type="text" id="hra" class="form-control" inputmode="numeric" required>
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="wageAllowance" class="form-label">Wage Allowance</label>
-                                    <input type="text" id="wageAllowance" class="form-control" inputmode="numeric" required>
-                                    <div class="invalid-feedback">Amount must be non-negative</div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="medicalAllowance" class="form-label">Medical Allowance</label>
-                                    <input type="text" id="medicalAllowance" class="form-control" inputmode="numeric" required>
+                                    <label for="otherAllowance" class="form-label">Other Allowance</label>
+                                    <input type="text" id="otherAllowance" class="form-control" inputmode="numeric" required>
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                             </div>
@@ -515,13 +684,8 @@
                             <h3 class="section-title">Deductions</h3>
                             <div class="amount-grid">
                                 <div class="form-group">
-                                    <label for="providentFund" class="form-label">Provident Fund</label>
-                                    <input type="text" id="providentFund" class="form-control" inputmode="numeric" required>
-                                    <div class="invalid-feedback">Amount must be non-negative</div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="esi" class="form-label">Employee State Insurance</label>
-                                    <input type="text" id="esi" class="form-control" inputmode="numeric" required>
+                                    <label for="professionalTax" class="form-label">Professional Tax</label>
+                                    <input type="text" id="professionalTax" class="form-control" inputmode="numeric" required>
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                                 <div class="form-group">
@@ -530,13 +694,18 @@
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="providentFund" class="form-label">Provident Fund</label>
+                                    <input type="text" id="providentFund" class="form-control" inputmode="numeric" required>
+                                    <div class="invalid-feedback">Amount must be non-negative</div>
+                                </div>
+                                <div class="form-group">
                                     <label for="lwp" class="form-label">Leave Without Pay</label>
                                     <input type="text" id="lwp" class="form-control" inputmode="numeric" required>
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="specialDeduction" class="form-label">Special Deduction</label>
-                                    <input type="text" id="specialDeduction" class="form-control" inputmode="numeric" required>
+                                    <label for="otherDeduction" class="form-label">Other Deduction</label>
+                                    <input type="text" id="otherDeduction" class="form-control" inputmode="numeric" required>
                                     <div class="invalid-feedback">Amount must be non-negative</div>
                                 </div>
                             </div>
@@ -596,6 +765,8 @@
                                     <th>Payslip ID</th>
                                     <th>Employee ID</th>
                                     <th>Employee Name</th>
+                                    <th>Designation</th>
+                                    <th>Office</th>
                                     <th>Month/Year</th>
                                     <th>Net Salary</th>
                                     <th>Status</th>
@@ -632,29 +803,65 @@
         </div>
     </div>
 
-    <div class="modal" id="viewPayslipModal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h3>Payslip Details</h3>
-                <button class="close-btn">×</button>
-            </div>
-            <div class="modal-body">
-                <div id="payslipDetailsContent"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="downloadBtn">Download PDF</button>
-                <button class="btn btn-secondary" id="closeViewBtn">Close</button>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const { jsPDF } = window.jspdf;
-            const companyLogoUrl = 'https://via.placeholder.com/150x50?text=Company+Logo';
+           const logoImg = new Image();
+                logoImg.crossOrigin = 'Anonymous'; // Important for CORS if needed
+                logoImg.src = './logo.png'; // Path to your logo
+
             let isSubmitting = false;
+
+            // Number to words conversion
+            function numberToWords(num) {
+                if (num === 0) return 'Zero Only';
+                if (num > 9999999) return 'Amount too large';
+
+                const ones = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+                const teens = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+                const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+                function convertHundreds(n) {
+                    let str = '';
+                    if (n > 99) {
+                        str += ones[Math.floor(n / 100)] + ' Hundred';
+                        n %= 100;
+                        if (n > 0) str += ' and ';
+                    }
+                    if (n > 19) {
+                        str += tens[Math.floor(n / 10)];
+                        n %= 10;
+                        if (n > 0) str += ' ' + ones[n];
+                    } else if (n > 9) {
+                        str += teens[n - 10];
+                    } else if (n > 0) {
+                        str += ones[n];
+                    }
+                    return str;
+                }
+
+                let str = '';
+                let lakh = Math.floor(num / 100000);
+                num %= 100000;
+                let thousand = Math.floor(num / 1000);
+                num %= 1000;
+
+                if (lakh > 0) {
+                    str += convertHundreds(lakh) + ' Lakh';
+                    if (thousand > 0 || num > 0) str += ' ';
+                }
+                if (thousand > 0) {
+                    str += convertHundreds(thousand) + ' Thousand';
+                    if (num > 0) str += ' ';
+                }
+                if (num > 0) {
+                    str += convertHundreds(num);
+                }
+
+                return str.trim() + ' Only';
+            }
 
             // Tab navigation
             const tabButtons = document.querySelectorAll('.tab-btn');
@@ -676,6 +883,17 @@
             const employeeNameInput = document.getElementById('employeeName');
             const employeeEmailInput = document.getElementById('employeeEmail');
             const monthYearInput = document.getElementById('monthYear');
+            const designationInput = document.getElementById('designation');
+            const officeLocationInput = document.getElementById('officeLocation');
+            const employmentTypeInput = document.getElementById('employmentType');
+            const dateOfJoiningInput = document.getElementById('dateOfJoining');
+            const workingDaysInput = document.getElementById('workingDays');
+            const bankNameInput = document.getElementById('bankName');
+            const panNoInput = document.getElementById('panNo');
+            const bankAccountNoInput = document.getElementById('bankAccountNo');
+            const pfNoInput = document.getElementById('pfNo');
+            const uanNoInput = document.getElementById('uanNo');
+            const esicNoInput = document.getElementById('esicNo');
             const netSalaryDisplay = document.getElementById('netSalary');
             const successMessage = document.getElementById('successMessage');
             const errorMessage = document.getElementById('errorMessage');
@@ -685,6 +903,11 @@
             // Set current month as default
             const today = new Date();
             monthYearInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+
+            // Set max date for date of joining to today
+            dateOfJoiningInput.max = today.toISOString().split('T')[0];
+            // Set min date for date of joining to Jan 1, 2021
+            dateOfJoiningInput.min = '2021-01-01';
 
             // Validations
             employeeIdInput.addEventListener('input', () => {
@@ -709,6 +932,64 @@
                 monthYearInput.classList.toggle('is-invalid', !isValid);
             });
 
+            designationInput.addEventListener('change', () => {
+                const isValid = designationInput.value !== '';
+                designationInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            officeLocationInput.addEventListener('change', () => {
+                const isValid = ['Hyderabad', 'Bangalore', 'Pune', 'Chennai', 'Delhi'].includes(officeLocationInput.value);
+                officeLocationInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            employmentTypeInput.addEventListener('change', () => {
+                const isValid = ['Permanent', 'Contract', 'Temporary', 'Intern'].includes(employmentTypeInput.value);
+                employmentTypeInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            dateOfJoiningInput.addEventListener('input', () => {
+                const date = new Date(dateOfJoiningInput.value);
+                const minDate = new Date('2021-01-01');
+                const isValid = date && date >= minDate && date <= today;
+                dateOfJoiningInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            workingDaysInput.addEventListener('input', () => {
+                const value = parseInt(workingDaysInput.value);
+                const isValid = value >= 1 && value <= 31;
+                workingDaysInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            bankNameInput.addEventListener('input', () => {
+                const isValid = /^[a-zA-Z\s]+$/.test(bankNameInput.value);
+                bankNameInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            panNoInput.addEventListener('input', () => {
+                const isValid = /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panNoInput.value);
+                panNoInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            bankAccountNoInput.addEventListener('input', () => {
+                const isValid = /^\d{10,18}$/.test(bankAccountNoInput.value);
+                bankAccountNoInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            pfNoInput.addEventListener('input', () => {
+                const isValid = /^[A-Z0-9]{12,22}$/.test(pfNoInput.value);
+                pfNoInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            uanNoInput.addEventListener('input', () => {
+                const isValid = /^\d{12}$/.test(uanNoInput.value);
+                uanNoInput.classList.toggle('is-invalid', !isValid);
+            });
+
+            esicNoInput.addEventListener('input', () => {
+                const isValid = /^[A-Z0-9]{10,17}$/.test(esicNoInput.value);
+                esicNoInput.classList.toggle('is-invalid', !isValid);
+            });
+
             numberInputs.forEach(input => {
                 input.addEventListener('input', () => {
                     input.value = input.value.replace(/[^0-9.]/g, '');
@@ -723,9 +1004,9 @@
             });
 
             function calculateNetSalary() {
-                const earnings = ['basicSalary', 'dearnessAllowance', 'hra', 'wageAllowance', 'medicalAllowance']
+                const earnings = ['basicSalary', 'hra', 'otherAllowance']
                     .reduce((sum, id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
-                const deductions = ['providentFund', 'esi', 'tds', 'lwp', 'specialDeduction']
+                const deductions = ['professionalTax', 'tds', 'providentFund', 'lwp', 'otherDeduction']
                     .reduce((sum, id) => sum + (parseFloat(document.getElementById(id).value) || 0), 0);
                 const netSalary = earnings - deductions;
                 netSalaryDisplay.textContent = `₹${netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
@@ -761,12 +1042,91 @@
                     isValid = false;
                 }
 
+                if (designationInput.value === '') {
+                    designationInput.classList.add('is-invalid');
+                    errors.push('Please select a valid designation');
+                    isValid = false;
+                }
+
+                if (!['Hyderabad', 'Bangalore', 'Pune', 'Chennai', 'Delhi'].includes(officeLocationInput.value)) {
+                    officeLocationInput.classList.add('is-invalid');
+                    errors.push('Please select a valid office location');
+                    isValid = false;
+                }
+
+                if (!['Permanent', 'Contract', 'Temporary', 'Intern'].includes(employmentTypeInput.value)) {
+                    employmentTypeInput.classList.add('is-invalid');
+                    errors.push('Please select a valid employment type');
+                    isValid = false;
+                }
+
+                const doj = new Date(dateOfJoiningInput.value);
+                const minDate = new Date('2021-01-01');
+                if (!doj || doj < minDate || doj > today) {
+                    dateOfJoiningInput.classList.add('is-invalid');
+                    errors.push('Date of joining must be between Jan 2021 and today');
+                    isValid = false;
+                }
+
+                const workingDays = parseInt(workingDaysInput.value);
+                if (isNaN(workingDays) || workingDays < 1 || workingDays > 31) {
+                    workingDaysInput.classList.add('is-invalid');
+                    errors.push('Working days must be between 1 and 31');
+                    isValid = false;
+                }
+
+                if (!/^[a-zA-Z\s]+$/.test(bankNameInput.value)) {
+                    bankNameInput.classList.add('is-invalid');
+                    errors.push('Invalid bank name');
+                    isValid = false;
+                }
+
+                if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(panNoInput.value)) {
+                    panNoInput.classList.add('is-invalid');
+                    errors.push('Invalid PAN number');
+                    isValid = false;
+                }
+
+                if (!/^\d{10,18}$/.test(bankAccountNoInput.value)) {
+                    bankAccountNoInput.classList.add('is-invalid');
+                    errors.push('Invalid bank account number');
+                    isValid = false;
+                }
+
+                if (!/^[A-Z0-9]{12,22}$/.test(pfNoInput.value)) {
+                    pfNoInput.classList.add('is-invalid');
+                    errors.push('Invalid PF number');
+                    isValid = false;
+                }
+
+                if (!/^\d{12}$/.test(uanNoInput.value)) {
+                    uanNoInput.classList.add('is-invalid');
+                    errors.push('Invalid UAN number');
+                    isValid = false;
+                }
+
+                if (!/^[A-Z0-9]{10,17}$/.test(esicNoInput.value)) {
+                    esicNoInput.classList.add('is-invalid');
+                    errors.push('Invalid ESIC number');
+                    isValid = false;
+                }
+
                 const basicSalary = parseFloat(document.getElementById('basicSalary').value) || 0;
                 if (basicSalary <= 0) {
                     document.getElementById('basicSalary').classList.add('is-invalid');
                     errors.push('Basic salary must be positive');
                     isValid = false;
                 }
+
+                const numericFields = ['hra', 'otherAllowance', 'professionalTax', 'tds', 'providentFund', 'lwp', 'otherDeduction'];
+                numericFields.forEach(id => {
+                    const value = parseFloat(document.getElementById(id).value) || 0;
+                    if (value < 0) {
+                        document.getElementById(id).classList.add('is-invalid');
+                        errors.push(`${id} must be non-negative`);
+                        isValid = false;
+                    }
+                });
 
                 return { isValid, errors };
             }
@@ -775,10 +1135,10 @@
             payslipForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 if (isSubmitting) return;
-                
+
                 errorMessage.style.display = 'none';
                 successMessage.style.display = 'none';
-                
+
                 const { isValid, errors } = validateForm();
                 if (!isValid) {
                     errorMessage.textContent = `Please correct: ${errors.join(', ')}`;
@@ -795,16 +1155,25 @@
                     employee_name: employeeNameInput.value,
                     employee_email: employeeEmailInput.value,
                     month_year: new Date(monthYearInput.value + '-01').toLocaleString('en-US', { month: 'long', year: 'numeric' }),
+                    designation: designationInput.value,
+                    office_location: officeLocationInput.value,
+                    employment_type: employmentTypeInput.value,
+                    date_of_joining: dateOfJoiningInput.value,
+                    working_days: parseInt(workingDaysInput.value),
+                    bank_name: bankNameInput.value,
+                    pan_no: panNoInput.value,
+                    bank_account_no: bankAccountNoInput.value,
+                    pf_no: pfNoInput.value,
+                    uan_no: uanNoInput.value,
+                    esic_no: esicNoInput.value,
                     basic_salary: parseFloat(document.getElementById('basicSalary').value) || 0,
-                    da: parseFloat(document.getElementById('dearnessAllowance').value) || 0,
                     hra: parseFloat(document.getElementById('hra').value) || 0,
-                    wage_allowance: parseFloat(document.getElementById('wageAllowance').value) || 0,
-                    medical_allowance: parseFloat(document.getElementById('medicalAllowance').value) || 0,
-                    pf: parseFloat(document.getElementById('providentFund').value) || 0,
-                    esi: parseFloat(document.getElementById('esi').value) || 0,
+                    other_allowance: parseFloat(document.getElementById('otherAllowance').value) || 0,
+                    professional_tax: parseFloat(document.getElementById('professionalTax').value) || 0,
                     tds: parseFloat(document.getElementById('tds').value) || 0,
+                    provident_fund: parseFloat(document.getElementById('providentFund').value) || 0,
                     lwp: parseFloat(document.getElementById('lwp').value) || 0,
-                    special_deduction: parseFloat(document.getElementById('specialDeduction').value) || 0
+                    other_deduction: parseFloat(document.getElementById('otherDeduction').value) || 0
                 };
 
                 try {
@@ -821,13 +1190,13 @@
 
                     const result = await response.json();
                     console.log('Payslip created:', result);
-                    
+
                     successMessage.style.display = 'flex';
                     setTimeout(() => successMessage.style.display = 'none', 3000);
-                    
+
                     payslipForm.reset();
                     netSalaryDisplay.textContent = '₹0.00';
-                    
+
                     if (document.getElementById('detailsTab').classList.contains('active')) {
                         loadPayslipHistory();
                     }
@@ -847,19 +1216,19 @@
                     const search = document.getElementById('searchInput').value;
                     const month = document.getElementById('monthFilter').value;
                     const year = document.getElementById('yearFilter').value;
-                    
+
                     const params = new URLSearchParams();
                     if (search) params.append('search', search);
                     if (month) params.append('month', month);
                     if (year) params.append('year', year);
-                    
+
                     const url = `http://localhost:3000/api/payslips/history?${params.toString()}`;
                     const response = await fetch(url);
-                    
+
                     if (!response.ok) {
                         throw new Error('Failed to fetch payslip history');
                     }
-                    
+
                     const payslips = await response.json();
                     displayPayslips(payslips);
                 } catch (err) {
@@ -872,135 +1241,184 @@
             function displayPayslips(payslips) {
                 const historyBody = document.getElementById('payslipHistory');
                 const noRecords = document.getElementById('noRecords');
-                
+
                 historyBody.innerHTML = '';
                 noRecords.style.display = payslips.length === 0 ? 'block' : 'none';
-                
+
                 payslips.forEach(payslip => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${payslip.payslip_id}</td>
                         <td>${payslip.employee_id}</td>
                         <td>${payslip.employee_name}</td>
+                        <td>${payslip.designation}</td>
+                        <td>${payslip.office_location}</td>
                         <td>${payslip.month_year}</td>
                         <td>₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                         <td><span class="badge badge-success">${payslip.status}</span></td>
                         <td>
-                            <button class="btn btn-sm btn-primary view-btn" id="view">View</button>
                             <button class="btn btn-sm btn-primary download-btn">Download</button>
                         </td>
                     `;
-                    
-                    row.querySelector('.view-btn').addEventListener('click', () => showPayslipDetails(payslip));
                     row.querySelector('.download-btn').addEventListener('click', () => downloadPayslipAsPDF(payslip));
-                    
                     historyBody.appendChild(row);
                 });
             }
 
-            function showPayslipDetails(payslip) {
-                document.getElementById('payslipDetailsContent').innerHTML = `
-                    <h2 style="text-align: center; color: var(--primary-color);">PAYSLIP</h2>
-                    <p style="text-align: center; color: #666;">${payslip.month_year}</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <p><strong>Employee ID:</strong> ${payslip.employee_id}</p>
-                            <p><strong>Name:</strong> ${payslip.employee_name}</p>
-                            <p><strong>Email:</strong> ${payslip.employee_email}</p>
-                        </div>
-                        <div>
-                            <p><strong>Payslip ID:</strong> ${payslip.payslip_id}</p>
-                            <p><strong>Status:</strong> ${payslip.status}</p>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
-                        <div>
-                            <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Earnings</h3>
-                            <p><strong>Basic Salary:</strong> ₹${payslip.basic_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Dearness Allowance:</strong> ₹${payslip.da.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>House Rent Allowance:</strong> ₹${payslip.hra.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Wage Allowance:</strong> ₹${payslip.wage_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Medical Allowance:</strong> ₹${payslip.medical_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p style="font-weight: bold;">Total Earnings: ₹${(payslip.basic_salary + payslip.da + payslip.hra + payslip.wage_allowance + payslip.medical_allowance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                        </div>
-                        <div>
-                            <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Deductions</h3>
-                            <p><strong>Provident Fund:</strong> ₹${payslip.pf.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Employee State Insurance:</strong> ₹${payslip.esi.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Tax Deducted at Source:</strong> ₹${payslip.tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Leave Without Pay:</strong> ₹${payslip.lwp.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p><strong>Special Deduction:</strong> ₹${payslip.special_deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            <p style="font-weight: bold;">Total Deductions: ₹${(payslip.pf + payslip.esi + payslip.tds + payslip.lwp + payslip.special_deduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                        </div>
-                    </div>
-                    <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; text-align: right;">
-                        <p style="font-weight: bold; font-size: 18px;">Net Salary: ₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                    </div>
-                `;
-                document.getElementById('viewPayslipModal').classList.add('show');
-            }
-
             async function downloadPayslipAsPDF(payslip) {
                 try {
+                    // Calculate totals
+                    const totalEarnings = Number(payslip.basic_salary) + Number(payslip.hra) + Number(payslip.other_allowance);
+                    const totalDeductions = Number(payslip.professional_tax) + Number(payslip.tds) + Number(payslip.provident_fund) + Number(payslip.lwp) + Number(payslip.other_deduction);
+                    const netSalary = totalEarnings - totalDeductions;
+                    const netSalaryWords = numberToWords(Math.floor(netSalary));
+                    const monthYear = payslip.month_year;
+
                     const docContent = document.createElement('div');
-                    docContent.style.padding = '20px';
-                    docContent.style.fontFamily = 'Arial, sans-serif';
+                    docContent.className = 'pdf-content';
+                    docContent.style.padding = '10mm';
+                    docContent.style.width = '210mm';
+                    docContent.style.backgroundColor = '#fff';
+                    docContent.style.boxSizing = 'border-box';
                     docContent.innerHTML = `
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <img src="./upload/logo.png" style="height: 50px;" alt="Company Logo">
-                            <h2 style="color: var(--primary-color);">PAYSLIP</h2>
-                            <p style="color: #666;">${payslip.month_year}</p>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5mm;">
                             <div>
-                                <p><strong>Employee ID:</strong> ${payslip.employee_id}</p>
-                                <p><strong>Name:</strong> ${payslip.employee_name}</p>
-                                <p><strong>Email:</strong> ${payslip.employee_email}</p>
+                                <p style="font-weight: bold; font-size: 9pt; margin: 0;">Astrolite Tech Solutions Pvt Ltd</p>
+                                <p style="font-size: 7pt; margin: 1mm 0 0;">Plot No 65, Flat No 201, 2nd Floor,</p>
+                                <p style="font-size: 7pt; margin: 0;">Siddivinayaka Nagar, Survey of India,</p>
+                                <p style="font-size: 7pt; margin: 0;">Madhapur, Hyderabad - 500081</p>
                             </div>
-                            <div>
-                                <p><strong>Payslip ID:</strong> ${payslip.payslip_id}</p>
-                                <p><strong>Status:</strong> ${payslip.status}</p>
-                            </div>
+ <img id="company-logo" src="${logoImg.src}" style="height: 15mm; max-width: 35mm;" alt="Company Logo">                        </div>
+                        <hr style="border: 0.2mm solid #ccc; margin: 3mm 0;">
+                        <h2 style="text-align: center; font-size: 12pt; color: #333; margin: 0;">Payslip of ${monthYear}</h2>
+                        <div style="margin: 5mm 0; font-size: 7pt;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width: 50%; vertical-align: top; padding-right: 5mm;">
+                                        <p><strong>Employee ID:</strong> ${payslip.employee_id}</p>
+                                        <p><strong>Name:</strong> ${payslip.employee_name}</p>
+                                        <p><strong>Email:</strong> ${payslip.employee_email}</p>
+                                        <p><strong>Designation:</strong> ${payslip.designation}</p>
+                                        <p><strong>Office:</strong> ${payslip.office_location}</p>
+                                        <p><strong>Employment:</strong> ${payslip.employment_type}</p>
+                                        <p><strong>Joining Date:</strong> ${new Date(payslip.date_of_joining).toLocaleDateString('en-IN')}</p>
+                                        <p><strong>Working Days:</strong> ${payslip.working_days}</p>
+                                    </td>
+                                    <td style="width: 50%; vertical-align: top;">
+                                        <p><strong>PID:</strong> ${payslip.payslip_id}</p>
+                                        <p><strong>Bank:</strong> ${payslip.bank_name}</p>
+                                        <p><strong>PAN:</strong> ${payslip.pan_no}</p>
+                                        <p><strong>Account No:</strong> ${payslip.bank_account_no}</p>
+                                        <p><strong>PF No:</strong> ${payslip.pf_no}</p>
+                                        <p><strong>UAN:</strong> ${payslip.uan_no}</p>
+                                        <p><strong>ESIC:</strong> ${payslip.esic_no}</p>
+                                        <p><strong>Status:</strong> ${payslip.status}</p>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
-                            <div>
-                                <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Earnings</h3>
-                                <p><strong>Basic Salary:</strong> ₹${payslip.basic_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Dearness Allowance:</strong> ₹${payslip.da.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>House Rent Allowance:</strong> ₹${payslip.hra.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Wage Allowance:</strong> ₹${payslip.wage_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Medical Allowance:</strong> ₹${payslip.medical_allowance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p style="font-weight: bold;">Total Earnings: ₹${(payslip.basic_salary + payslip.da + payslip.hra + payslip.wage_allowance + payslip.medical_allowance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            </div>
-                            <div>
-                                <h3 style="color: var(--secondary-color); border-bottom: 1px solid #eee;">Deductions</h3>
-                                <p><strong>Provident Fund:</strong> ₹${payslip.pf.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Employee State Insurance:</strong> ₹${payslip.esi.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Tax Deducted at Source:</strong> ₹${payslip.tds.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Leave Without Pay:</strong> ₹${payslip.lwp.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p><strong>Special Deduction:</strong> ₹${payslip.special_deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                                <p style="font-weight: bold;">Total Deductions: ₹${(payslip.pf + payslip.esi + payslip.tds + payslip.lwp + payslip.special_deduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
-                            </div>
+                        <table style="width: 100%; border-collapse: collapse; margin: 5mm 0; font-size: 7pt;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: left;">Earnings</th>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: right;">Amount (₹)</th>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: left;">Deductions</th>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: right;">Amount (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Basic Salary</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.basic_salary).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Professional Tax</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.professional_tax).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">House Rent Allowance</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.hra).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Tax Deducted at Source</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.tds).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Other Allowance</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.other_allowance).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Provident Fund</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.provident_fund).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;"></td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;"></td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Leave Without Pay</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.lwp).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;"></td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;"></td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Other Deduction</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${Number(payslip.other_deduction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; font-weight: bold;">Total Earnings</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right; font-weight: bold;">${totalEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; font-weight: bold;">Total Deductions</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right; font-weight: bold;">${totalDeductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="background-color: #f8f9fa; padding: 3mm; border-radius: 2mm; margin-top: 3mm;">
+                            <p style="font-weight: bold; font-size: 9pt; text-align: right; margin: 0;">Net Salary: ₹${netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                            <p style="text-align: right; font-size: 7pt; margin: 1mm 0 0; text-transform: capitalize;">(${netSalaryWords})</p>
                         </div>
-                        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; text-align: right;">
-                            <p style="font-weight: bold; font-size: 18px;">Net Salary: ₹${payslip.net_salary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                        <div style="clear: both;"></div>
+                        <table style="width: 100%; border-collapse: collapse; margin: 5mm 0; font-size: 7pt;">
+                            <thead>
+                                <tr>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: left;">Description</th>
+                                    <th style="border: 0.2mm solid #ddd; padding: 2mm; background-color: #f8f9fa; text-align: right;">Amount (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Total Earnings (a)</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${totalEarnings.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm;">Total Deductions (b)</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right;">${totalDeductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; font-weight: bold;">Net Pay (a-b)</td>
+                                    <td style="border: 0.2mm solid #ddd; padding: 2mm; text-align: right; font-weight: bold;">${netSalary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="text-align: center; color: #333; font-size: 7pt; margin-top: 5mm;">
+                            <p style="margin: 0;">This is a auto-generated payslip.If you have doubts of the content of this payslip contact astrolite tech solution hr</p>
+                            <p style="margin: 1mm 0 0;">Astrolite Tech Solutions</p>
                         </div>
-                        <div style="margin-top: 20px;">
-                            <p style="text-align: center; color: #666;">Astrolite Tech Solutions</p>
+                        <div style="text-align: right; font-size: 6pt; color: #777; margin-top: 5mm;">
+                            <p>Generated on: ${new Date().toLocaleString('en-IN')}</p>
                         </div>
                     `;
                     document.body.appendChild(docContent);
 
-                    const canvas = await html2canvas(docContent, { scale: 2 });
+                    const canvas = await html2canvas(docContent, { 
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true
+                    });
                     const imgData = canvas.toDataURL('image/png');
                     const pdf = new jsPDF('p', 'mm', 'a4');
                     const imgWidth = 210;
-                    const pageHeight = 297;
                     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    
+
+                    if (imgHeight > 297) {
+                        console.warn('Content may be too tall for A4 page. Adjust layout if truncated.');
+                    }
+
                     pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                    pdf.save(`Payslip_${payslip.payslip_id}.pdf`);
-                    
+                    pdf.save(`Payslip_${payslip.payslip_id}_${payslip.employee_id}.pdf`);
                     document.body.removeChild(docContent);
                 } catch (err) {
                     console.error('PDF generation error:', err);
@@ -1009,13 +1427,6 @@
                 }
             }
 
-            // Close modal buttons
-            document.querySelectorAll('.close-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    btn.closest('.modal').classList.remove('show');
-                });
-            });
-
             // Form reset
             payslipForm.querySelector('button[type="reset"]').addEventListener('click', () => {
                 payslipForm.reset();
@@ -1023,6 +1434,9 @@
                 document.querySelectorAll('.form-control').forEach(input => input.classList.remove('is-invalid'));
                 errorMessage.style.display = 'none';
                 monthYearInput.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+                designationInput.value = '';
+                officeLocationInput.value = '';
+                employmentTypeInput.value = '';
             });
 
             // Search and filter events
