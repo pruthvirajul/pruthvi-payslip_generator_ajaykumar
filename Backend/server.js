@@ -15,9 +15,9 @@ const UPLOAD_DIR = path.join(__dirname, process.env.UPLOAD_DIR || '../upload');
 const MAX_FILE_SIZE = process.env.MAX_FILE_SIZE || '10mb';
 const DB_CONFIG = {
   user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'postgres',
   database: process.env.DB_NAME || 'new_employee_db',
-  password: process.env.DB_PASSWORD || 'Password@12345',
+  password: process.env.DB_PASSWORD || 'admin321',
   port: process.env.DB_PORT || 5432,
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
 };
@@ -30,10 +30,10 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 app.use(helmet());
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : [
-    'http://localhost:3000',
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-    'http://127.0.0.1:5503',
+    'http://13.60.168.103:3000',
+    'http://13.60.168.103:5500',
+    'http://13.60.168.103:5500',
+    'http://13.60.168.103:5503',
     'null'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -391,7 +391,7 @@ async function startServer() {
     await initializeDatabase();
     const server = app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
-      console.log(`API Documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`API Documentation: http://13.60.168.103:${PORT}/api-docs`);
     });
 
     process.on('SIGTERM', () => shutdown(server));
