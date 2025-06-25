@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: payslip-postgres
+    ports:
+      - "5989:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin321
+      POSTGRES_DB: new_employee_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./Backend
+    container_name: payslip-backend
+    ports:
+      - "3979:3979"
+    environment:
+      PORT: 3979
+      DB_USER: postgres
+      DB_PASSWORD: admin321
+      DB_NAME: new_employee_db
+      DB_HOST: postgres
+      DB_PORT: 5432
+      UPLOAD_DIR: /app/upload
+    depends_on:
+      - postgres
+    volumes:
+      - ./upload:/app/upload
+
+  frontend:
+    build: ./Frontend
+    container_name: payslip-frontend
+    ports:
+      - "6751:80"
+    depends_on:
+      - backend
+
+  hr_page:
+    build: ./HR_Page
+    container_name: payslip-hr-page
+    ports:
+      - "6752:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+
